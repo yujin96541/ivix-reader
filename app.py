@@ -5,41 +5,77 @@ from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode # ★ 추가된
 st.set_page_config(layout="wide")
 
 # ==========================================
+
 # 🎁 [팝업창 UI] 상세 매물 정보
+
 # ==========================================
-@st.dialog("📄 상세 매물 정보", width="large")
+
+@st.dialog("📄 상세 매물 정보 (텍스트 복사 가능)", width="large")
+
 def show_detail_popup(row_data):
-    # AgGrid는 버전에 따라 데이터 형식이 약간 달라서 안전하게 변환해 줍니다.
+
+    # 데이터 형식 변환 (AgGrid 대응)
+
     if isinstance(row_data, pd.DataFrame):
+
         row_data = row_data.iloc[0].to_dict()
+
     elif isinstance(row_data, pd.Series):
+
         row_data = row_data.to_dict()
 
+
+
     st.subheader("1. 매물 기본 정보")
+
     col1, col2, col3, col4 = st.columns(4)
+
     with col1: st.text_input("작성일자", value=str(row_data.get("작성일자", "")).split(" ")[0])
+
     with col2: st.text_input("구분", value=row_data.get("구분", ""))
+
     with col3: st.text_input("거래유형", value=row_data.get("거래유형", ""))
+
     with col4: st.text_input("매물종류", value=row_data.get("매물종류", ""))
+
         
+
     col5, col6, col7, col8 = st.columns(4)
+
     with col5:
-        b_area = str(row_data.get('건물평', '')).replace("평", "") # 중복 방지
+
+        b_area = str(row_data.get('건물평', '')).replace("평", "")
+
         st.text_input("건물평(평)", value=f"{b_area}평" if b_area.strip() else "")
+
     with col6:
+
         r_area = str(row_data.get('실평', '')).replace("평", "")
+
         st.text_input("실평(평)", value=f"{r_area}평" if r_area.strip() else "")
+
     with col7: st.text_input("입주가능일자", value=row_data.get("입주가능일자", ""))
+
     with col8: st.text_input("담당자", value=row_data.get("담당자", ""))
 
+
+
     st.text_input("소재지", value=row_data.get("소재지", ""))
+
+    
+
+    # --- 수정된 매물특징 부분 (들여쓰기 주의!) ---
+
     st.write("**매물특징**")
-# st.info를 사용하면 배경색이 살짝 들어가서 내용이 훨씬 잘 보이고, 
-# 텍스트 길이에 따라 박스 크기가 아래로 무한히 자동 확장됩니다.
-st.info(row_data.get("매물특징", "내용 없음"))
+
+    st.info(row_data.get("매물특징", "내용 없음"))
+
     
-    st.divider() 
+
+    st.divider() # 이 줄의 시작 위치가 바로 윗줄인 st.info와 똑같아야 합니다!
+
     
+
     st.subheader("2. 금액 정보 (단위: 만원)")
     col_p1, col_p2, col_p3 = st.columns(3)
     with col_p1: st.text_input("매매금액", value=row_data.get("매매금액", ""))
