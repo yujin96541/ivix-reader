@@ -33,7 +33,10 @@ def show_detail_popup(row_data):
     with col8: st.text_input("담당자", value=row_data.get("담당자", ""))
 
     st.text_input("소재지", value=row_data.get("소재지", ""))
-    st.text_area("매물특징", value=row_data.get("매물특징", ""), height=100)
+    st.write("**매물특징**")
+# st.info를 사용하면 배경색이 살짝 들어가서 내용이 훨씬 잘 보이고, 
+# 텍스트 길이에 따라 박스 크기가 아래로 무한히 자동 확장됩니다.
+st.info(row_data.get("매물특징", "내용 없음"))
     
     st.divider() 
     
