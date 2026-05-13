@@ -84,17 +84,23 @@ if uploaded_file is not None:
     st.write("---")
     
     # ------------------------------------------
-    # 📍 실시간 검색 필터링
+    # 📍 실시간 검색 필터링 (L열 제외)
     # ------------------------------------------
     st.write("### 🔍 매물 필터링")
-    search_keyword = st.text_input("검색어를 입력하면 아래 표가 실시간으로 필터링됩니다 (예: 문정역, 정상, 월세)")
+    search_keyword = st.text_input("검색어를 입력하면 아래 표가 실시간으로 필터링됩니다 (L열 제외)")
     
-    # 원본 데이터를 복사해서 필터링용 데이터프레임 생성
     display_df = df.copy()
     
-    # 검색어가 있으면 필터링 적용
     if search_keyword:
-        mask = display_df.astype(str).apply(lambda x: x.str.contains(search_keyword, case=False, na=False)).any(axis=1)
+        # L열인 "부동산" 열을 제외하고 검색 대상 설정
+        exclude_col = "부동산" 
+        search_target_df = display_df.drop(columns=[exclude_col], errors='ignore')
+        
+        # 제외된 데이터를 바탕으로 필터링 마스크 생성
+        mask = search_target_df.astype(str).apply(
+            lambda x: x.str.contains(search_keyword, case=False, na=False)
+        ).any(axis=1)
+        
         display_df = display_df[mask]
 
     # 보기 좋게 날짜와 평수 정리
