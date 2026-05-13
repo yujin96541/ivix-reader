@@ -10,7 +10,7 @@ st.set_page_config(layout="wide")
 
 # ==========================================
 
-@st.dialog("📄 상세 매물 정보 (텍스트 복사 가능)", width="large")
+@st.dialog("📄 상세 매물 정보", width="large")
 
 def show_detail_popup(row_data):
 
